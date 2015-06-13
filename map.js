@@ -22,11 +22,13 @@ $(function() {
   }); 
 
   function locateAddress() {
-    // TODO: get the value from input the commander provide using jquery
-    var location =  
+    
+    var location =  $('#map-input').val();
 
     // TODO: show alert info when no location is provided in the input box
-    if() {
+    if(location =="") {
+      alert("Max doesn't know where to go. Commander, new orders please.")
+      return;
 
     }
 
@@ -47,10 +49,20 @@ $(function() {
 
   // TODO: fade out your spaceship image and show it on the map
   function launchSpaceship(address) {
+    map.panTo(address);
+
+
+    var icon = {
+      url: 'spaceship.png',
+      scaledSize: new google.maps.Size (32, 32)
+    }
 
 
     spaceship = new google.maps.Marker({
-
+      position: address,
+      map: map,
+      icon: icon,
+      
     });
 
     // start to land your spaceship when it appears on the map after 0.5 second
@@ -61,11 +73,13 @@ $(function() {
   function landSpaceship() {
     
     infowindow = new google.maps.InfoWindow({
-      
+      content: "Almost there..."
     });
+
+    infowindow.open (map, spaceship);
     
     // start to zoom in after 0.5 second
-    setTimeout(zoomIn, 500);
+    setTimeout(landSuccess, 2000);
   }
 
   // TODO: call smoothZoom function provided below with landSuccess as callback function
@@ -74,7 +88,8 @@ $(function() {
   }
 
   function landSuccess() {
-    setTimeout(showMessage, 500);
+    map.setZoom(16);
+    infowindow.setContent("Am here Commander!");
   }
 
   // TODO: change the message box content to "Landed Successfully!"
